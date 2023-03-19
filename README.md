@@ -1,4 +1,4 @@
-C++ Univerity project originally written in Q1 2022
+C++ University project originally written in Q1 2022
 
 Written using C++99
 
