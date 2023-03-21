@@ -9,11 +9,11 @@
 #ifndef SET_H
 #define SET_H
 
-#include <algorithm> // std::swap
-#include <cassert>   // assert
-#include <cstddef>   // std::ptrdiff_t
-#include <iostream>  // std::cout (per debug)
-#include <iterator>  // std::forward_iterator_tag
+#include <algorithm>  // std::swap
+#include <cassert>    // assert
+#include <cstddef>    // std::ptrdiff_t
+#include <iostream>   // std::cout (per debug)
+#include <iterator>   // std::forward_iterator_tag
 
 /**
  * @brief Implementazione di un unordred Set dinamico
@@ -25,8 +25,9 @@
  * @tparam T tipo dei valori contenuti nel set
  * @tparam Eql operatore di confronto == (equivalenza) tra due tipi nel set
  */
-template <typename T, typename Eql> class Set {
-public:
+template <typename T, typename Eql>
+class Set {
+ public:
   // Macro per un unsigned int
   typedef unsigned int u_int;
   // Macro per il valore generico T
@@ -119,8 +120,7 @@ public:
   template <typename Iter>
   Set(Iter begin, Iter end) : _head_set(nullptr), _cardinality(0) {
     try {
-      for (; begin != end; ++begin)
-        add(static_cast<T>(*begin));
+      for (; begin != end; ++begin) add(static_cast<T>(*begin));
     } catch (...) {
       clear();
       throw;
@@ -266,10 +266,10 @@ public:
   }
 
   // forward declarations per const iterator
-private:
+ private:
   struct node;
 
-public:
+ public:
   /**
    * @brief Iteratore che ritorna gli elementi inseriti (non modificabili)
    *
@@ -277,7 +277,7 @@ public:
    * interna e ritorna (un reference o un pointer) non modificabile
    */
   class const_iterator {
-  public:
+   public:
     // Traits dell'iterator
     typedef std::forward_iterator_tag iterator_category;
     typedef T value_type;
@@ -335,13 +335,13 @@ public:
       return !(other == *this);
     }
 
-  private:
+   private:
     friend class Set;
 
     const_iterator(const node *x) : _ptr(x) {}
 
     const node *_ptr;
-  }; // classe const_iterator
+  };  // classe const_iterator
 
   /**
    * @brief Ritorna l'iteratore per l'inizio della sequenza di dati
@@ -396,8 +396,7 @@ public:
    */
   bool operator==(const Set<T, Eql> &other) {
     // prima controllo parametri (dim)
-    if (this->size() != other.size())
-      return false;
+    if (this->size() != other.size()) return false;
 
     Eql predic;
     const_iterator begin_a, end_a, begin_other, end_other;
@@ -498,7 +497,7 @@ public:
     return tmp;
   }
 
-private:
+ private:
   /**
    * @brief Struttura dati nodo
    *
@@ -569,8 +568,7 @@ Set<T, Eql> filter_out(const Set<T, Eql> &S, P pred) {
   try {
     typename Set<T, Eql>::const_iterator b, e;
     for (b = S.begin(), e = S.end(); b != e; ++b) {
-      if (pred(*b))
-        tmp.add(*b);
+      if (pred(*b)) tmp.add(*b);
     }
   } catch (...) {
     tmp.clear();
@@ -579,4 +577,4 @@ Set<T, Eql> filter_out(const Set<T, Eql> &S, P pred) {
   return tmp;
 }
 
-#endif // SET_H
+#endif  // SET_H

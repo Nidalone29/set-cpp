@@ -1,7 +1,8 @@
-#include "set.h"
 #include <cmath>
 #include <iostream>
 #include <string>
+
+#include "set.h"
 
 // funtori interi
 /**
@@ -19,7 +20,6 @@ struct int_equal {
  * @return true se il numero è pari
  */
 struct int_even {
-
   bool operator()(int a) { return (a % 2 == 0); }
 };
 
@@ -94,7 +94,7 @@ std::ostream &operator<<(std::ostream &os, const Point3D &p) {
  *
  */
 void test_metodi_fondamentali_int() {
-  Set<int, int_equal> set_of_integers; // default constructor
+  Set<int, int_equal> set_of_integers;  // default constructor
 
   set_of_integers.add(10);
   set_of_integers.add(9);
@@ -102,9 +102,9 @@ void test_metodi_fondamentali_int() {
   set_of_integers.add(888);
   set_of_integers.add(777);
   set_of_integers.add(666);
-  set_of_integers.add(9);     // esiste già
-  set_of_integers.remove(69); // rimosso in mezzo
-  set_of_integers.remove(10); // rimosso all'inizio
+  set_of_integers.add(9);      // esiste già
+  set_of_integers.remove(69);  // rimosso in mezzo
+  set_of_integers.remove(10);  // rimosso all'inizio
   // il set dovrebbe avere size 4
   std::cout << "size(expected 4): " << set_of_integers.size() << std::endl;
 
@@ -122,7 +122,7 @@ void test_metodi_fondamentali_int() {
   std::cout << "elementi copy_assigned_set_of_integers: "
             << copy_assigned_set_of_integers << std::endl;
 
-} // ~Set()
+}  // ~Set()
 
 /**
  * @brief viene testata la costruzione di un set tramite un sottoset definito
@@ -131,7 +131,7 @@ void test_metodi_fondamentali_int() {
  */
 void test_costruttore_iter() {
   // test con interi
-  Set<int, int_equal> set_of_integers; // default constructor
+  Set<int, int_equal> set_of_integers;  // default constructor
 
   set_of_integers.add(68);
   set_of_integers.add(678);
