@@ -54,8 +54,8 @@ class Set {
    * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
    * contiene una new
    */
-  Set(const Set &other) : _head_set(nullptr), _cardinality(0) {
-    node *current = other._head_set;
+  Set(const Set& other) : _head_set(nullptr), _cardinality(0) {
+    node* current = other._head_set;
     try {
       while (current != nullptr) {
         add(current->node_value);
@@ -82,7 +82,7 @@ class Set {
    * @param other Set da copiare
    * @return Set& reference al Set risultante dalla copia
    */
-  Set &operator=(const Set &other) {
+  Set& operator=(const Set& other) {
     if (this != &other) {
       Set tmp(other);
       std::swap(this->_head_set, tmp._head_set);
@@ -155,12 +155,12 @@ class Set {
    * @return true sse item aggiunto con successo, false se è stato trovato
    * un duplicato
    */
-  bool add(const value_type &toadd) {
-    node *current = _head_set;
+  bool add(const value_type& toadd) {
+    node* current = _head_set;
 
     // caso set vuoto
     if (this->is_empty()) {
-      node *tmp = new node(toadd);
+      node* tmp = new node(toadd);
       _head_set = tmp;
       _cardinality++;
 #ifndef NDEBUG
@@ -184,7 +184,7 @@ class Set {
       // caso raggiunta fine della lista
       if (current->next == nullptr) {
         // siamo alla fine quindi aggiungiamo
-        node *tmp = new node(toadd);
+        node* tmp = new node(toadd);
         current->next = tmp;
         _cardinality++;
 #ifndef NDEBUG
@@ -205,9 +205,9 @@ class Set {
    *
    * @param toremove elemento da rimuovre
    */
-  void remove(const value_type &toremove) {
-    node *current = _head_set;
-    node *previous = _head_set;
+  void remove(const value_type& toremove) {
+    node* current = _head_set;
+    node* previous = _head_set;
 
     while (current != nullptr) {
       // caso elemento da rimuovere trovato
@@ -251,9 +251,9 @@ class Set {
    * @post _head_set == nullptr
    */
   void clear() {
-    node *current = _head_set;
+    node* current = _head_set;
     while (current != nullptr) {
-      node *cnext = current->next;
+      node* cnext = current->next;
       delete current;
       current = cnext;
     }
@@ -282,8 +282,8 @@ class Set {
     typedef std::forward_iterator_tag iterator_category;
     typedef T value_type;
     typedef ptrdiff_t difference_type;
-    typedef const T *pointer;
-    typedef const T &reference;
+    typedef const T* pointer;
+    typedef const T& reference;
 
     /**
      * @brief Costruttore di default
@@ -316,7 +316,7 @@ class Set {
     /**
      * @brief Overload pre incremento ++
      */
-    const_iterator &operator++() {
+    const_iterator& operator++() {
       _ptr = _ptr->next;
       return *this;
     }
@@ -324,23 +324,23 @@ class Set {
     /**
      * @brief Oveload operatore ==
      */
-    bool operator==(const const_iterator &other) const {
+    bool operator==(const const_iterator& other) const {
       return (_ptr == other._ptr);
     }
 
     /**
      * @brief Overlaod operatore !=
      */
-    bool operator!=(const const_iterator &other) const {
+    bool operator!=(const const_iterator& other) const {
       return !(other == *this);
     }
 
    private:
     friend class Set;
 
-    const_iterator(const node *x) : _ptr(x) {}
+    const_iterator(const node* x) : _ptr(x) {}
 
-    const node *_ptr;
+    const node* _ptr;
   };  // classe const_iterator
 
   /**
@@ -366,11 +366,11 @@ class Set {
    * @param i indice "posizione" dell'elemento
    * @return const value_type& const reference al dato del set in posizione i
    */
-  const value_type &operator[](const int i) const {
+  const value_type& operator[](const int i) const {
     assert(i >= 0);
     assert(i < _cardinality);
 
-    node *current = _head_set;
+    node* current = _head_set;
     for (int x = 0; x < i; ++x) {
       current = current->next;
     }
@@ -394,7 +394,7 @@ class Set {
    * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
    * contiene una new
    */
-  bool operator==(const Set<T, Eql> &other) {
+  bool operator==(const Set<T, Eql>& other) {
     // prima controllo parametri (dim)
     if (this->size() != other.size()) return false;
 
@@ -425,8 +425,8 @@ class Set {
    * @param set il set da mandare allo stream
    * @return std::ostream& output stream
    */
-  friend std::ostream &operator<<(std::ostream &os, const Set &set) {
-    node *current = set._head_set;
+  friend std::ostream& operator<<(std::ostream& os, const Set& set) {
+    node* current = set._head_set;
     while (current != nullptr) {
       os << current->node_value << "  ";
       current = current->next;
@@ -446,10 +446,10 @@ class Set {
    * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
    * contiene una new
    */
-  friend Set<T, Eql> operator+(const Set<T, Eql> &a, const Set<T, Eql> &b) {
+  friend Set<T, Eql> operator+(const Set<T, Eql>& a, const Set<T, Eql>& b) {
     Set<T, Eql> tmp(a);
     try {
-      node *current_b = b._head_set;
+      node* current_b = b._head_set;
       while (current_b != nullptr) {
         tmp.add(current_b->node_value);
         current_b = current_b->next;
@@ -473,7 +473,7 @@ class Set {
    * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
    * contiene una new
    */
-  friend Set<T, Eql> operator-(const Set<T, Eql> &a, const Set<T, Eql> &b) {
+  friend Set<T, Eql> operator-(const Set<T, Eql>& a, const Set<T, Eql>& b) {
     Set<T, Eql> tmp;
     try {
       Eql predic;
@@ -520,7 +520,7 @@ class Set {
      * @post next == n
      * @post node_value == v
      */
-    node(const value_type &v, node *n) : node_value(v), next(n) {}
+    node(const value_type& v, node* n) : node_value(v), next(n) {}
 
     /**
      * @brief Costruttore secondario
@@ -529,7 +529,7 @@ class Set {
      * @post next == n
      * @post node_value == v
      */
-    explicit node(const value_type &v) : node_value(v), next(nullptr) {}
+    explicit node(const value_type& v) : node_value(v), next(nullptr) {}
 
     // Copy constructor, Operatore Assignment e Destructor possiamo
     // farli generare al compilatore
@@ -537,11 +537,11 @@ class Set {
     // valore contenuto nel nodo
     value_type node_value;
     // Puntatre al prossimo nodo
-    node *next;
+    node* next;
   };
 
   // Linked list for set
-  node *_head_set;
+  node* _head_set;
   // Set size (cardinality)
   u_int _cardinality;
   // equals operator for ==
@@ -563,7 +563,7 @@ class Set {
  * contiene una new
  */
 template <typename T, typename Eql, typename P>
-Set<T, Eql> filter_out(const Set<T, Eql> &S, P pred) {
+Set<T, Eql> filter_out(const Set<T, Eql>& S, P pred) {
   Set<T, Eql> tmp;
   try {
     typename Set<T, Eql>::const_iterator b, e;

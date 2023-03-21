@@ -30,7 +30,7 @@ struct int_even {
  * @return true se le due stringhe sono uguali
  */
 struct string_equal {
-  bool operator()(const std::string &a, const std::string &b) {
+  bool operator()(const std::string& a, const std::string& b) {
     return (a == b);
   }
 };
@@ -41,7 +41,7 @@ struct string_equal {
  * @return true se la lunghezza della stringa è  un numero pari
  */
 struct string_evensize {
-  bool operator()(const std::string &a) { return (a.size() % 2 == 0); }
+  bool operator()(const std::string& a) { return (a.size() % 2 == 0); }
 };
 
 // funtori punto3D custom
@@ -78,7 +78,7 @@ struct point_close_to_center {
 /**
  * @brief operatore per la stampa di un punto 3D
  */
-std::ostream &operator<<(std::ostream &os, const Point3D &p) {
+std::ostream& operator<<(std::ostream& os, const Point3D& p) {
   std::cout << "(x: " << p.x << ", y: " << p.y << ", z: " << p.z << ")";
   return os;
 }
