@@ -16,7 +16,7 @@
 #include <iterator>   // std::forward_iterator_tag
 
 /**
- * @brief Implementazione di un unordred Set dinamico
+ * @brief Implementation of an unordered Set
  *
  * Classe Set che implementa logicamente un set matematico.
  * Implementazione effettiva realizzato con una single linked list di elementi
@@ -134,7 +134,9 @@ class Set {
    * @return true se il set è vuoto
    * @return false se il set contiene almeno un elemento
    */
-  bool is_empty() const { return (_cardinality == 0); }
+  bool is_empty() const {
+    return (_cardinality == 0);
+  }
 
   /**
    * @brief Dimensione della set
@@ -144,7 +146,9 @@ class Set {
    *
    * @return u_int cardinalità (numero di elementi inseriti) del Set
    */
-  u_int size() const { return _cardinality; }
+  u_int size() const {
+    return _cardinality;
+  }
 
   /**
    * @brief Aggiunge un elemento (alla fine) del set
@@ -295,14 +299,18 @@ class Set {
      *
      * @return reference reference all'elemento nel set
      */
-    reference operator*() const { return _ptr->node_value; }
+    reference operator*() const {
+      return _ptr->node_value;
+    }
 
     /**
      * @brief Overload operatore ->
      *
      * @return pointer puntatore all'elemento nel set
      */
-    pointer operator->() const { return &(_ptr->node_value); }
+    pointer operator->() const {
+      return &(_ptr->node_value);
+    }
 
     /**
      * @brief Overload post incremento ++
@@ -348,14 +356,18 @@ class Set {
    *
    * @return const_iterator iteratore al primo elemento
    */
-  const_iterator begin() const { return const_iterator(_head_set); }
+  const_iterator begin() const {
+    return const_iterator(_head_set);
+  }
 
   /**
    * @brief Ritorna l'iteratore per la fine della sequenza di dati
    *
    * @return const_iterator iteratore a nullptr
    */
-  const_iterator end() const { return const_iterator(nullptr); }
+  const_iterator end() const {
+    return const_iterator(nullptr);
+  }
 
   /**
    * @brief Overload operatore [] per accesso a dati del set tramite indice

@@ -19,7 +19,7 @@ enable_testing()
 
 add_executable(
   hello_test
-  test.cc
+  test.cpp
 )
 target_link_libraries(
   hello_test
