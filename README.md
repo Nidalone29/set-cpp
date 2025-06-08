@@ -1,8 +1,10 @@
-C++ University project originally written in Q1 2022
+# C++ set
 
-Written using C++99
+C++ set library implemented with a linked list. University project originally written in Q1 2022.
+Written using C++98 features
 
-TODOS:
-- Translate documentation in english
-- Rewrite the entire test suite using [Googletest](https://github.com/google/googletest)
-- Complete the implementation of various [set operations](https://www.wikiwand.com/en/Set_(mathematics)#Basic_operations)
+## Supported operations
+
+- Union
+- Intersection
+- Filter
