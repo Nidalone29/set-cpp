@@ -4,6 +4,7 @@
 #include <tuple>
 #include <typeinfo>
 #include <vector>
+#include <array>
 
 #include "../src/set.h"
 #include "gtest/gtest.h"
@@ -94,15 +95,18 @@ std::ostream& operator<<(std::ostream& os, const Point3D& p) {
 
 using testing::Types;
 
-template <typename T, typename Eql>
+template <typename T, typename Eql, typename Pred>
 struct TypeDefinitions {
   typedef T My_type;
   typedef Eql My_type_eql;
+  typedef Pred My_type_comp;
 };
 
-typedef ::testing::Types<TypeDefinitions<int, int_equal>,
-                         TypeDefinitions<std::string, string_equal>,
-                         TypeDefinitions<Point3D, point_equal>>
+typedef ::testing::Types<TypeDefinitions<int, int_equal, int_even>,
+                         TypeDefinitions<
+                           std::string, string_equal, string_evensize>,
+                         TypeDefinitions<
+                           Point3D, point_equal, point_close_to_center>>
 Implementations;
 
 template <class C>
@@ -112,7 +116,7 @@ protected:
 };
 
 constexpr int DATASET_SIZE = 5;
-std::array<int, DATASET_SIZE> elements_test_int = {0, 1, INT_MAX, INT_MIN, -1};
+std::array<int, DATASET_SIZE> elements_test_int = {0, 2, INT_MAX, INT_MIN, -1};
 std::array<std::string, DATASET_SIZE> elements_test_string = {
     "Alberto", "Andrea", "Giovanni", "Riccardo", "Lorenzo"};
 std::array<Point3D, DATASET_SIZE> elements_test_points = {
@@ -253,4 +257,17 @@ TYPED_TEST(SetTest, Intersection) {
   other.add(getvalue<typename TypeParam::My_type>(1));
   result = this->set - other;
   EXPECT_EQ(result.size(), 1);
+}
+
+TYPED_TEST(SetTest, FilterOut) {
+  this->set.add(getvalue<typename TypeParam::My_type>(0));
+  this->set.add(getvalue<typename TypeParam::My_type>(1));
+  this->set.add(getvalue<typename TypeParam::My_type>(2));
+  this->set.add(getvalue<typename TypeParam::My_type>(3));
+  this->set.add(getvalue<typename TypeParam::My_type>(4));
+
+  Set<typename TypeParam::My_type, typename TypeParam::My_type_eql> result =
+      filter_out(this->set, typename TypeParam::My_type_comp{});
+
+  EXPECT_EQ(result.size(), 3);
 }
