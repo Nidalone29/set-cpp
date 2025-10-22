@@ -3,6 +3,6 @@ BasedOnStyle: Google
 Language: Cpp
 DerivePointerAlignment: false
 PointerAlignment: Left
-SortIncludes: false
+SortIncludes: Never
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortEnumsOnASingleLine: false

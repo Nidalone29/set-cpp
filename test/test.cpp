@@ -10,18 +10,17 @@
 #include "gtest/gtest.h"
 
 /**
- * @brief struct che rappresenta un punto 3D
+ * @brief struct that represents a 3D Point
  *
  */
 struct Point3D {
   int x, y, z;
 };
 
-// funtori interi
 /**
- * @brief funtore numeri uguali
+ * @brief Functor for equal numbers
 
- * @return true sse i due numeri sono uguali
+ * @return true iif the numbers are equal
  */
 struct int_equal {
   bool operator()(int a, int b) {
@@ -30,9 +29,9 @@ struct int_equal {
 };
 
 /**
- * @brief funtore numeri pari
+ * @brief Functor for even numbers
  *
- * @return true sse il numero è pari
+ * @return true iif the number is even
  */
 struct int_even {
   bool operator()(int a) {
@@ -40,11 +39,10 @@ struct int_even {
   }
 };
 
-// funtori stringhe
 /**
- * @brief funtore sringhe uguali
+ * @brief Functor for equal strings
  *
- * @return true sse le due stringhe sono uguali
+ * @return true true iif the strings are equal
  */
 struct string_equal {
   bool operator()(const std::string& a, const std::string& b) {
@@ -53,9 +51,9 @@ struct string_equal {
 };
 
 /**
- * @brief funtore stringhe di lunghezza pari
+ * @brief Functor for strings of even length
  *
- * @return true sse la lunghezza della stringa è un numero pari
+ * @return true iif the length of the string is even
  */
 struct string_evensize {
   bool operator()(const std::string& a) {
@@ -64,9 +62,9 @@ struct string_evensize {
 };
 
 /**
- * @brief funtore punti uguali
+ * @brief Functor for equal Points
  *
- * @return true se due punti sono uguali (hanno la stessa coordianta x y z)
+ * @return true iif the points are equal (have the same x y z)
  */
 struct point_equal {
   bool operator()(Point3D a, Point3D b) {
@@ -75,9 +73,10 @@ struct point_equal {
 };
 
 /**
- * @brief funtore punto vicino al centro
+ * @brief Functor for Point close to the center
  *
- * @return true se il punto ha una distanza <= 5 dal centro
+ * @return true iif the distance of the point from the center is less than or
+ * equal to 5
  */
 struct point_close_to_center {
   bool operator()(Point3D a) {
@@ -86,7 +85,7 @@ struct point_close_to_center {
 };
 
 /**
- * @brief operatore per la stampa di un punto 3D
+ * @brief Operator for pretty print a 3D Point
  */
 std::ostream& operator<<(std::ostream& os, const Point3D& p) {
   std::cout << "(x: " << p.x << ", y: " << p.y << ", z: " << p.z << ")";
@@ -102,16 +101,15 @@ struct TypeDefinitions {
   typedef Pred My_type_comp;
 };
 
-typedef ::testing::Types<TypeDefinitions<int, int_equal, int_even>,
-                         TypeDefinitions<
-                           std::string, string_equal, string_evensize>,
-                         TypeDefinitions<
-                           Point3D, point_equal, point_close_to_center>>
-Implementations;
+typedef ::testing::Types<
+    TypeDefinitions<int, int_equal, int_even>,
+    TypeDefinitions<std::string, string_equal, string_evensize>,
+    TypeDefinitions<Point3D, point_equal, point_close_to_center>>
+    Implementations;
 
 template <class C>
 class SetTest : public testing::Test {
-protected:
+ protected:
   Set<typename C::My_type, typename C::My_type_eql> set;
 };
 
@@ -223,6 +221,8 @@ TYPED_TEST(SetTest, OperatorEquals) {
 
   EXPECT_TRUE(this->set == other);
   other.remove(getvalue<typename TypeParam::My_type>(3));
+  EXPECT_FALSE(this->set == other);
+  other.add(getvalue<typename TypeParam::My_type>(4));
   EXPECT_FALSE(this->set == other);
 }
 

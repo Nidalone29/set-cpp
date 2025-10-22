@@ -18,26 +18,25 @@
 /**
  * @brief Implementation of an unordered Set
  *
- * Classe Set che implementa logicamente un set matematico.
- * Implementazione effettiva realizzato con una single linked list di elementi
- * generici T
+ * Set Class that implements a mathematical Set of generic elements T
+ * https://en.wikipedia.org/wiki/Set_(mathematics)
  *
- * @tparam T tipo dei valori contenuti nel set
- * @tparam Eql operatore di confronto == (equivalenza) tra due tipi nel set
+ * @tparam T Type of values contained in the Set
+ * @tparam Eql equivalence operator between two values in the Set
  */
 template <typename T, typename Eql>
 class Set {
  public:
-  // Macro per un unsigned int
+  // unsigned int macro
   typedef unsigned int u_int;
-  // Macro per il valore generico T
+  // generic value T macro
   typedef T value_type;
 
   // default operations
   /**
    * @brief Default constructor
    *
-   * Creazione di un Set vuoto (0 elementi)
+   * Construct and empty Set
    */
   Set() : _head_set(nullptr), _cardinality(0) {
 #ifndef NDEBUG
@@ -48,11 +47,10 @@ class Set {
   /**
    * @brief Copy constructor
    *
-   * Copy contructor che effettua una deep copy da un Set
+   * Copy constructor that performs a DEEP copy of the elements
    *
    * @param other
-   * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
-   * contiene una new
+   * @throws std::bad_alloc possible allocation exception caused by new
    */
   Set(const Set& other) : _head_set(nullptr), _cardinality(0) {
     node* current = other._head_set;
@@ -61,9 +59,9 @@ class Set {
         add(current->node_value);
         current = current->next;
       }
-      // la cardinalità viene impostata dalla add
+      // note that the cardinality is Set by add()
     } catch (...) {
-      // viene sempre fatta questa clear + eccezione quando c'è un add
+      // always clean before throwing because of add()
       clear();
       throw;
     }
@@ -76,11 +74,10 @@ class Set {
   /**
    * @brief Copy assignment operator
    *
-   * Copy assignment che effettua una deep copy da un Set
-   * con l'operatore =
+   * Copy assignment operator that performs a DEEP copy
    *
-   * @param other Set da copiare
-   * @return Set& reference al Set risultante dalla copia
+   * @param other Set to copy
+   * @return Set& reference to the resulting Set
    */
   Set& operator=(const Set& other) {
     if (this != &other) {
@@ -95,9 +92,9 @@ class Set {
   }
 
   /**
-   * @brief Distruttore di un oggetto Set
+   * @brief Destructor
    *
-   * Viene distrutto l'oggetto Set sfruttando la funzione clear()
+   * The destruction of the Set is performed using the helper function clear()
    */
   ~Set() {
     clear();
@@ -107,62 +104,62 @@ class Set {
   }
 
   /**
-   * @brief Costruttore tramite due iteratori generici
+   * @brief Construction with iterators
    *
-   * Costruttore che prende come parametro due iteratori da un altro set
+   * Constructor from two iterators
    *
-   * @tparam Iter tipo dell'iteratore
-   * @param b iteratore di inizio
-   * @param e iteratiore di fine
-   * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
-   * contiene una new
+   * @tparam Iter Type of the Iterator
+   * @param begin begin iterator
+   * @param end end iterator
+   * @throws std::bad_alloc possible allocation exception caused by new
+   * (contained in add())
    */
   template <typename Iter>
   Set(Iter begin, Iter end) : _head_set(nullptr), _cardinality(0) {
     try {
-      for (; begin != end; ++begin) add(static_cast<T>(*begin));
+      for (; begin != end; ++begin) {
+        add(static_cast<T>(*begin));
+      }
     } catch (...) {
       clear();
       throw;
     }
   }
 
-  // __________________________________________
   /**
-   * @brief Controlla se il set è vuoto
+   * @brief Checks for an empty Set
    *
-   * @return true se il set è vuoto
-   * @return false se il set contiene almeno un elemento
+   * @return true if the Set is empty, false otherwise
    */
   bool is_empty() const {
     return (_cardinality == 0);
   }
 
   /**
-   * @brief Dimensione della set
+   * @brief Number of elements in the Set
    *
-   * @note è stato chiamato size() e non cardinality() perchè è più intuitivo
-   * per un programmatore
+   * @note The function name is size() instead of cardinality() because it's
+   * more intuitive for a programmer
    *
-   * @return u_int cardinalità (numero di elementi inseriti) del Set
+   * @return u_int number of elements in the Set
    */
   u_int size() const {
     return _cardinality;
   }
 
   /**
-   * @brief Aggiunge un elemento (alla fine) del set
+   * @brief Add an element at the end of the Set
    *
-   * se l'elemento esiste non succede niente
+   * Function that adds an element to the Set. If the element already exists the
+   * function returns false and the Set is not changed.
    *
-   * @param toadd elemento da aggiungere
-   * @return true sse item aggiunto con successo, false se è stato trovato
-   * un duplicato
+   * @param toadd Element to add
+   * @return true iif the element has been added successfully, false otherwise
    */
   bool add(const value_type& toadd) {
     node* current = _head_set;
 
-    // caso set vuoto
+    // empty Set
     if (this->is_empty()) {
       node* tmp = new node(toadd);
       _head_set = tmp;
@@ -174,20 +171,19 @@ class Set {
       return true;
     }
 
-    // caso set popolato lo aggiungiamo alla fine
+    // non empty Set, aka adding the element to the end
     while (current != nullptr) {
-      // caso elemento duplicato
+      // duplicated element
       if (_equals(current->node_value, toadd)) {
-        // non aggiungiamo l'elemento (non creiamo neanche il nodo)
+        // we don't add the element
 #ifndef NDEBUG
         std::cout << "add(const value_type&)"
                   << " value already exists " << toadd << std::endl;
 #endif
         return false;
       }
-      // caso raggiunta fine della lista
+      // adding to the end of the list
       if (current->next == nullptr) {
-        // siamo alla fine quindi aggiungiamo
         node* tmp = new node(toadd);
         current->next = tmp;
         _cardinality++;
@@ -197,26 +193,26 @@ class Set {
 #endif
         return true;
       }
-      // incremento
       current = current->next;
     }
   }
 
   /**
-   * @brief Rimuove un elemento dal set
+   * @brief Remove an element from the Set
    *
-   * se l'elemento non era già presente non succede niente
+   * Function that removes an element from the Set. If the element to remove was
+   * not found the Set is not changed.
    *
-   * @param toremove elemento da rimuovre
+   *  @param toremove element to remove
    */
   void remove(const value_type& toremove) {
     node* current = _head_set;
     node* previous = _head_set;
 
     while (current != nullptr) {
-      // caso elemento da rimuovere trovato
+      // check if the element to remove has been found
       if (_equals(current->node_value, toremove)) {
-        // caso inizio lista
+        // first element of the list
         if (current == previous) {
           _head_set = current->next;
           delete current;
@@ -227,7 +223,7 @@ class Set {
 #endif
           return;
         } else {
-          // caso generico
+          // generic case
           previous->next = current->next;
           delete current;
           _cardinality--;
@@ -238,18 +234,18 @@ class Set {
           return;
         }
       }
-      // incremento
+
       previous = current;
       current = current->next;
     }
 #ifndef NDEBUG
-    std::cout << "remove(const value_type&) "
+    std::cout << "remove(const value_type&)"
               << " value not found " << toremove << std::endl;
 #endif
   }
 
   /**
-   * @brief Viene svuotato l'oggetto Set dai sui elementi
+   * @brief Function that eliminates every element in the Set
    *
    * @post _cardinality == 0
    * @post _head_set == nullptr
@@ -269,20 +265,21 @@ class Set {
 #endif
   }
 
-  // forward declarations per const iterator
+  // forward declarations for const iterator
  private:
   struct node;
 
  public:
   /**
-   * @brief Iteratore che ritorna gli elementi inseriti (non modificabili)
+   * @brief Const iterator
    *
-   * Forward iterator che itera su tutti i nodi dell set
-   * interna e ritorna (un reference o un pointer) non modificabile
+   * Forward iterator that iterates over all the nodes in the Set and returns
+   * a non modifiable reference or pointer. The order of the elements in the Set
+   * is defined by their insertion order.
    */
   class const_iterator {
    public:
-    // Traits dell'iterator
+    // Iterator Traits
     typedef std::forward_iterator_tag iterator_category;
     typedef T value_type;
     typedef ptrdiff_t difference_type;
@@ -290,30 +287,30 @@ class Set {
     typedef const T& reference;
 
     /**
-     * @brief Costruttore di default
+     * @brief Default Constructor
      */
     const_iterator() : _ptr(nullptr) {}
 
     /**
-     * @brief Overload operatore *
+     * @brief Overload operator *
      *
-     * @return reference reference all'elemento nel set
+     * @return reference to the element
      */
     reference operator*() const {
       return _ptr->node_value;
     }
 
     /**
-     * @brief Overload operatore ->
+     * @brief Overload operator ->
      *
-     * @return pointer puntatore all'elemento nel set
+     * @return pointer to the element
      */
     pointer operator->() const {
       return &(_ptr->node_value);
     }
 
     /**
-     * @brief Overload post incremento ++
+     * @brief Overload post increment ++
      */
     const_iterator operator++(int) {
       const_iterator tmp(*this);
@@ -322,7 +319,7 @@ class Set {
     }
 
     /**
-     * @brief Overload pre incremento ++
+     * @brief Overload pre increment ++
      */
     const_iterator& operator++() {
       _ptr = _ptr->next;
@@ -330,14 +327,14 @@ class Set {
     }
 
     /**
-     * @brief Oveload operatore ==
+     * @brief Overload operator ==
      */
     bool operator==(const const_iterator& other) const {
       return (_ptr == other._ptr);
     }
 
     /**
-     * @brief Overlaod operatore !=
+     * @brief Overload operator !=
      */
     bool operator!=(const const_iterator& other) const {
       return !(other == *this);
@@ -349,34 +346,35 @@ class Set {
     const_iterator(const node* x) : _ptr(x) {}
 
     const node* _ptr;
-  };  // classe const_iterator
+  };  // class const_iterator
 
   /**
-   * @brief Ritorna l'iteratore per l'inizio della sequenza di dati
+   * @brief Function that returns the iterator to the first element inserted in
+   * the Set
    *
-   * @return const_iterator iteratore al primo elemento
+   * @return const_iterator iterator to the first element
    */
   const_iterator begin() const {
     return const_iterator(_head_set);
   }
 
   /**
-   * @brief Ritorna l'iteratore per la fine della sequenza di dati
+   * @brief Function that represents the end of the data
    *
-   * @return const_iterator iteratore a nullptr
+   * @return const_iterator iterator to nullptr
    */
   const_iterator end() const {
     return const_iterator(nullptr);
   }
 
   /**
-   * @brief Overload operatore [] per accesso a dati del set tramite indice
+   * @brief Overload operator [] to access elements with an index
    *
-   * la posizione i è più o meno intesa per l'ordine di inserimento
-   * (più o meno perchè se vengono rimossi elementi la posizione si scala)
+   * The index is loosely based on the insertion order (loosely because elements
+   * can be removed and added)
    *
-   * @param i indice "posizione" dell'elemento
-   * @return const value_type& const reference al dato del set in posizione i
+   * @param i index index of teh value
+   * @return const value_type& const reference to the value stored in position i
    */
   const value_type& operator[](const int i) const {
     assert(i >= 0);
@@ -391,50 +389,42 @@ class Set {
   }
 
   /**
-   * @brief confronto di equivalenza tra due set
+   * @brief Equivalency comparison between two Sets
    *
-   * Vengono confrontati i due set e viene controllato se contengono gli
-   * stessi elementi (NON viene contato l'ordine)
-   * la logica implementativa si basa sul costruire un altro set ed
-   * aggiungerci sia gli elementi di a che gli elementi di b e se il set
-   * risultante ha la stessa dimensione di a e b, allora a e b sono
-   * equivalenti
+   * The function compares two Sets by checking if all the elements of a Set are
+   * present in the other Set (in ay arbitrary order). This is implemented by
+   * making a local copy of the other Set adding all the elements of the current
+   * Set into the copy. If there is a duplicate the add function returns true,
+   * therefore the Set are not equal.
    *
-   * @param b secondo set
-   * @return true se i due set sono equivalenti
-   * @return false altrimenti
-   * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
-   * contiene una new
+   * @param other The Set that the current Set is compared to
+   * @return true iif the two Sets have the same element
    */
   bool operator==(const Set<T, Eql>& other) {
-    // prima controllo parametri (dim)
-    if (this->size() != other.size()) return false;
+    if (this->size() != other.size()) {
+      return false;
+    }
 
-    Eql predic;
-    const_iterator begin_a, end_a, begin_other, end_other;
-    for (begin_other = other.begin(), end_other = other.end();
-         begin_other != end_other; ++begin_other) {
-      // questa var found è una ottimizzazione per non far continuare
-      // il controllo dopo aver trovato un elemnto comune nel set b
-      for (begin_a = this->begin(), end_a = this->begin(); begin_a != end_a;
-           ++begin_a) {
-        if (!predic(*begin_a, *begin_other)) {
-          return false;
-        }
+    Set local_copy(other);
+    const_iterator begin_a, end_a;
+    for (begin_a = this->begin(), end_a = this->end(); begin_a != end_a;
+         ++begin_a) {
+      if (local_copy.add(*begin_a)) {
+        return false;
       }
     }
 
     return true;
   }
 
-  // funzioni globali, impliementate qui per comodità sui dati templati
   /**
-   * @brief overload operatore << per tutti gli elementi di un set
+   * @brief Overload operator <<
    *
-   * vengono mandati tutti gli elementi di un set (separati da doppio spazio)
+   * This function returns a stream of all the elements in the Set separated by
+   * two spaces
    *
    * @param os output stream
-   * @param set il set da mandare allo stream
+   * @param set input Set
    * @return std::ostream& output stream
    */
   friend std::ostream& operator<<(std::ostream& os, const Set& set) {
@@ -447,16 +437,16 @@ class Set {
   }
 
   /**
-   * @brief implementazione Union ("concatenazione" di due set)
+   * @brief Implementation of the Union operation ("concatenation" of two Sets)
    *
-   * viene ritornato un nuovo set che la tutti gli elementi dei due set
-   * a e b non duplicati
+   * The function returns a new Set that contains all the elements of the input
+   * Sets, without any duplicates
    *
-   * @param a primo set
-   * @param b secondo set
-   * @return Set<T, Eql> un nuovo set risultante da a unito b
-   * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
-   * contiene una new
+   * @param a first input Set
+   * @param b second input Set
+   * @return Set<T, Eql> a new Set defined by the union of the Sets a and b
+   * @throws std::bad_alloc possible allocation exception caused by new
+   * (contained in add())
    */
   friend Set<T, Eql> operator+(const Set<T, Eql>& a, const Set<T, Eql>& b) {
     Set<T, Eql> tmp(a);
@@ -474,16 +464,17 @@ class Set {
   }
 
   /**
-   * @brief Intersection Union ("intersezione" di due set)
+   * @brief Implementation of the Intersection operation
    *
-   * viene ritornato un nuovo set che contiene gli elementi in comune tra i
-   * due set
+   * The function returns a new Set that contains all the elements in common
+   * between the two input Sets
    *
-   * @param a primo set
-   * @param b secondo set
-   * @return Set<T, Eql> un nuovo set risultante da a intersecato b
-   * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
-   * contiene una new
+   * @param a first input Set
+   * @param b second input Set
+   * @return Set<T, Eql> a new Set defined by the intersection of the Sets a and
+   * b
+   * @throws std::bad_alloc possible allocation exception caused by new
+   * (contained in add())
    */
   friend Set<T, Eql> operator-(const Set<T, Eql>& a, const Set<T, Eql>& b) {
     Set<T, Eql> tmp;
@@ -491,8 +482,8 @@ class Set {
       Eql predic;
       const_iterator begin_a, end_a, begin_b, end_b;
       for (begin_a = a.begin(), end_a = a.end(); begin_a != end_a; ++begin_a) {
-        // questa var found è una ottimizzazione per non far continuare
-        // il controllo dopo aver trovato un elemnto comune nel set b
+        // the found variable is used as an optimization to interrupt the loop
+        // when you find the value in the other Set
         bool found = false;
         for (begin_b = b.begin(), end_b = b.end(); (begin_b != end_b) && !found;
              ++begin_b) {
@@ -511,68 +502,64 @@ class Set {
 
  private:
   /**
-   * @brief Struttura dati nodo
+   * @brief Data structure for the Node
    *
-   * Struttura dati node interna che viene usata per contenere gli elementi
-   * inseriti in dei nodi linkati singoli.
+   * Internal DS for the underlying Linked List
    */
   struct node {
     /**
-     * @brief Costruttore di default
+     * @brief Default constructor
      *
      * @post next == nullptr
      */
     node() : next(nullptr) {}
 
     /**
-     * @brief Costruttore secondario
+     * @brief Constructor with value and next
      *
-     * @param v elemento
-     * @param n puntatore a next
+     * @param v element
+     * @param n pointer to next
      * @post next == n
      * @post node_value == v
      */
     node(const value_type& v, node* n) : node_value(v), next(n) {}
 
     /**
-     * @brief Costruttore secondario
+     * @brief Constructor with value
      *
-     * @param v elemento
+     * @param v element
      * @post next == n
      * @post node_value == v
      */
     explicit node(const value_type& v) : node_value(v), next(nullptr) {}
 
-    // Copy constructor, Operatore Assignment e Destructor possiamo
-    // farli generare al compilatore
-
-    // valore contenuto nel nodo
+    // Value contained in the node
     value_type node_value;
-    // Puntatre al prossimo nodo
+    // Pointer to next node
     node* next;
   };
 
-  // Linked list for set
+  // Linked list for Set
   node* _head_set;
   // Set size (cardinality)
   u_int _cardinality;
-  // equals operator for ==
+  // Equals operator for ==
   Eql _equals;
 };
 
 /**
- * @brief funzione globale che ritorna un nuovo set con elementi che rispettano
- * un certo predicato P
+ * @brief Global function that returns a new Set with all the elements that
+ * satisfy a predicate P
  *
- * @tparam T tipo del set
- * @tparam Eql operatore di confronto del set
- * @tparam P predicato
- * @param S il set sui cui elementi viene verificata la corrispondenza
- * @param pred il predicato da applicare agli element del set
- * @return Set<T, Eql> un nuovo set che contiene tutti gli elementi di S che
- * soddisfano il prediato P
- * @throws std::bad_alloc possibile eccezione di allocazione dato che la add
- * contiene una new
+ * @tparam T Type of the Set
+ * @tparam Eql Equality operator fo the Set
+ * @tparam P Type of the Predicate
+ * @param S input Set
+ * @param pred the predicate that will be applied to all the element in the Set
+ * @return Set<T, Eql> a new Set with all the elements that satisfy the input
+ * predicate
+ * @throws std::bad_alloc possible allocation exception caused by new
+ * (contained in add())
  */
 template <typename T, typename Eql, typename P>
 Set<T, Eql> filter_out(const Set<T, Eql>& S, P pred) {
